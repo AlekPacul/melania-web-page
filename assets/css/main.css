@@ -1,0 +1,76 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+/* ── Melania brand palette (primary = deep navy #1a3b4c) ───────────── */
+@theme {
+  --color-melania-50:  #f0f7fb;
+  --color-melania-100: #daeef7;
+  --color-melania-200: #c6e7fd;
+  --color-melania-300: #abcbe0;
+  --color-melania-400: #a4c4d9;
+  --color-melania-500: #436274;
+  --color-melania-600: #335264;
+  --color-melania-700: #1a3b4c;
+  --color-melania-800: #132e3c;
+  --color-melania-900: #0d2030;
+  --color-melania-950: #091520;
+
+  /* Wood / secondary tone (#735a3a) */
+  --color-wood-50:  #fef8f1;
+  --color-wood-100: #fddab2;
+  --color-wood-200: #ffddb6;
+  --color-wood-300: #e2c19b;
+  --color-wood-400: #c9a37b;
+  --color-wood-500: #a68966;
+  --color-wood-600: #8d7050;
+  --color-wood-700: #735a3a;
+  --color-wood-800: #594325;
+  --color-wood-900: #3f2c14;
+  --color-wood-950: #29180a;
+
+  /* Design token shorthands */
+  --color-surface:           #faf9f8;
+  --color-surface-low:       #f4f3f2;
+  --color-surface-container: #eeeeed;
+  --color-on-surface:        #1a1c1c;
+  --color-on-surface-muted:  #41484b;
+  --color-outline:           #71787c;
+  --color-outline-variant:   #c1c7cc;
+
+  /* Typography */
+  --font-serif: 'Noto Serif', Georgia, serif;
+  --font-sans:  'Manrope', system-ui, sans-serif;
+}
+
+/* ── Base ───────────────────────────────────────────────────────────── */
+* { box-sizing: border-box; }
+
+body {
+  background-color: #faf9f8;
+  color: #1a1c1c;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .serif {
+  font-family: var(--font-serif);
+}
+
+/* ── Utilities ──────────────────────────────────────────────────────── */
+.editorial-shadow {
+  box-shadow: 0 4px 24px rgba(26, 28, 28, 0.06);
+}
+
+.ambient-shadow {
+  box-shadow: 0 8px 32px rgba(26, 59, 76, 0.08);
+}
+
+.glass-nav {
+  background: rgba(250, 249, 248, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.progress-bar {
+  transition: width 0.8s ease;
+}
