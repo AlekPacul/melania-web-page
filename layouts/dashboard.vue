@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { NavigationMenuItem } from '@nuxt/ui'
-
 const route = useRoute()
 const mobileOpen = ref(false)
 const { profile, signOut } = useAuth()
 
-const navMain = computed<NavigationMenuItem[]>(() => [
+interface NavItem { label: string; icon: string; to: string }
+
+const navMain = computed<NavItem[]>(() => [
   { label: 'Dashboard',      icon: 'i-lucide-layout-dashboard', to: '/admin' },
   { label: 'Jadwal Misa',    icon: 'i-lucide-calendar',         to: '/admin/jadwal-misa' },
   { label: 'Kegiatan',       icon: 'i-lucide-activity',         to: '/admin/kegiatan' },
@@ -15,7 +15,7 @@ const navMain = computed<NavigationMenuItem[]>(() => [
   { label: 'Donasi',         icon: 'i-lucide-heart-handshake',  to: '/admin/donasi' },
 ])
 
-const navBottom = computed<NavigationMenuItem[]>(() => [
+const navBottom = computed<NavItem[]>(() => [
   { label: 'Pengaturan', icon: 'i-lucide-settings', to: '/admin/pengaturan' },
 ])
 

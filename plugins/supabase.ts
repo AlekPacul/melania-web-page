@@ -35,6 +35,7 @@ export default defineNuxtPlugin({
           getAll() {
             if (!event) return []
             return parseCookieHeader(getHeader(event, 'cookie') ?? '')
+              .map(({ name, value }) => ({ name, value: value ?? '' }))
           },
           setAll(cookiesToSet) {
             if (!event) return
