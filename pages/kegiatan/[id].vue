@@ -16,7 +16,7 @@ const route = useRoute()
 const supabase = useSupabase()
 const id = route.params.id as string
 
-const { data: activity, error } = await useAsyncData(`kegiatan-${id}`, async () => {
+const { data: activity } = await useAsyncData(`kegiatan-${id}`, async () => {
   const { data, error } = await supabase
     .from('activities')
     .select('id, title, description, activity_date, activity_time, location, category, image_url')

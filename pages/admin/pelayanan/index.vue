@@ -54,10 +54,6 @@ const COLORS: { value: MinistryColor; label: string; dot: string }[] = [
   { value: 'indigo', label: 'Indigo', dot: 'bg-indigo-500' },
 ]
 
-const COLOR_BAR: Record<MinistryColor, string> = {
-  blue: 'bg-blue-500', green: 'bg-green-500', amber: 'bg-amber-500',
-  purple: 'bg-purple-500', red: 'bg-red-500', teal: 'bg-teal-500', indigo: 'bg-indigo-500',
-}
 const COLOR_BG: Record<MinistryColor, string> = {
   blue: 'bg-blue-100', green: 'bg-green-100', amber: 'bg-amber-100',
   purple: 'bg-purple-100', red: 'bg-red-100', teal: 'bg-teal-100', indigo: 'bg-indigo-100',
