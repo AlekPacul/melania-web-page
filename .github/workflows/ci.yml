@@ -78,7 +78,7 @@ jobs:
         run: |
           rsync -az --delete \
             -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.VPS_PORT }}" \
-            .output/ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/home/melania/melania-app/
+            .output/ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/home/${{ secrets.VPS_USER }}/melania-app/
 
       - name: Restart app
         run: |
