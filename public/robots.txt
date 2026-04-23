@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin/
+Disallow: /login
+Disallow: /lupa-sandi
+Disallow: /reset-sandi
+
+Sitemap: https://paroki-melania-dev.my.id/sitemap.xml

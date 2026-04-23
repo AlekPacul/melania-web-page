@@ -9,6 +9,49 @@ useHead({
 useSeoMeta({
   ogTitle: 'Paroki Santa Melania Bandung',
   ogDescription: 'Paroki Katolik Santa Melania, Bandung. Melayani umat sejak 1954.',
+  ogImage: 'https://paroki-melania-dev.my.id/assets/hero.jpg',
+  ogType: 'website',
+  ogUrl: 'https://paroki-melania-dev.my.id',
+  twitterCard: 'summary_large_image',
+  twitterTitle: 'Paroki Santa Melania Bandung',
+  twitterDescription: 'Paroki Katolik Santa Melania, Bandung. Melayani umat sejak 1954.',
+  twitterImage: 'https://paroki-melania-dev.my.id/assets/hero.jpg',
+})
+
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Church',
+        name: 'Paroki Santa Melania Bandung',
+        alternateName: 'Gereja Santa Melania',
+        url: 'https://paroki-melania-dev.my.id',
+        logo: 'https://paroki-melania-dev.my.id/assets/logo.jpg',
+        image: 'https://paroki-melania-dev.my.id/assets/hero.jpg',
+        description: 'Paroki Katolik Santa Melania, Bandung. Melayani umat sejak 1954 di Jl. Melania No.1-3, Cihaur Geulis, Kota Bandung, Jawa Barat.',
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: 'Jl. Melania No.1-3, Cihaur Geulis',
+          addressLocality: 'Bandung',
+          addressRegion: 'Jawa Barat',
+          postalCode: '40123',
+          addressCountry: 'ID',
+        },
+        geo: {
+          '@type': 'GeoCoordinates',
+          latitude: -6.9034,
+          longitude: 107.6186,
+        },
+        telephone: '+6281321272634',
+        openingHours: ['Sa 17:00-18:00', 'Su 06:30-07:30', 'Su 09:00-10:00'],
+        sameAs: [
+          'https://www.instagram.com/omkstmelania/',
+        ],
+      }),
+    },
+  ],
 })
 
 const supabase = useSupabase()

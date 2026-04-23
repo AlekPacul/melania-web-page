@@ -2,7 +2,31 @@
 export default defineNuxtConfig({
   devtools: { enabled: false },
 
-  modules: ['@nuxt/ui', '@nuxt/eslint'],
+  modules: ['@nuxt/ui', '@nuxt/eslint', '@nuxtjs/sitemap'],
+
+  site: {
+    url: 'https://paroki-melania-dev.my.id',
+    name: 'Paroki Santa Melania Bandung',
+  },
+
+  sitemap: {
+    strictNuxtContentPaths: false,
+    urls: [
+      { loc: '/', priority: 1.0, changefreq: 'weekly' },
+      { loc: '/jadwal-misa', priority: 0.9, changefreq: 'weekly' },
+      { loc: '/kegiatan', priority: 0.8, changefreq: 'daily' },
+      { loc: '/pelayanan', priority: 0.8, changefreq: 'monthly' },
+      { loc: '/sakramen', priority: 0.7, changefreq: 'monthly' },
+      { loc: '/sakramen/baptis', priority: 0.6, changefreq: 'monthly' },
+      { loc: '/sakramen/ekaristi', priority: 0.6, changefreq: 'monthly' },
+      { loc: '/sakramen/krisma', priority: 0.6, changefreq: 'monthly' },
+      { loc: '/sakramen/pernikahan', priority: 0.6, changefreq: 'monthly' },
+      { loc: '/sakramen/pengakuan-dosa', priority: 0.6, changefreq: 'monthly' },
+      { loc: '/sakramen/pengurapan-orang-sakit', priority: 0.6, changefreq: 'monthly' },
+      { loc: '/struktur', priority: 0.6, changefreq: 'monthly' },
+      { loc: '/donasi', priority: 0.7, changefreq: 'monthly' },
+    ],
+  },
 
   runtimeConfig: {
     // Server-only (never exposed to browser)

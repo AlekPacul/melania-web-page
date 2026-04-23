@@ -13,6 +13,7 @@
   "dependencies": {
     "@iconify-json/lucide": "^1.2.33",
     "@nuxt/ui": "^3.1.2",
+    "@nuxtjs/sitemap": "^8.0.13",
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.103.0",
     "nuxt": "^3.17.1",
