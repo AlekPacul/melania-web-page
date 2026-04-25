@@ -95,7 +95,7 @@ async function onSubmit() {
           'login_attempts',
           JSON.stringify({ count: failedAttempts.value, until: lockoutUntil.value }),
         )
-      } catch {}
+      } catch { /* sessionStorage unavailable */ }
       errorMsg.value = `Terlalu banyak percobaan gagal. Coba lagi dalam ${lockoutSecondsLeft.value} detik.`
       startTicker()
     } else {
@@ -106,7 +106,7 @@ async function onSubmit() {
   }
 
   // Clear lockout state on successful login
-  try { sessionStorage.removeItem('login_attempts') } catch {}
+  try { sessionStorage.removeItem('login_attempts') } catch { /* sessionStorage unavailable */ }
 
   await navigateTo(safeRedirect.value)
 }
