@@ -26,8 +26,7 @@ export default defineNuxtConfig({
         // Content Security Policy — 'unsafe-inline' required for Nuxt SSR hydration
         'Content-Security-Policy':
           "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://*.supabase.co; connect-src 'self' https://*.supabase.co; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'",
-        // Remove technology fingerprinting (OWASP A05 / CWE-200)
-        'X-Powered-By': '',
+        // X-Powered-By is removed via server/plugins/security.ts (render:response hook)
       },
     },
   },
