@@ -2,11 +2,14 @@
 /**
  * Login page — email + password only.
  *
- * OWASP notes:
+ * OWASP A07 (Identification and Authentication Failures):
  * - No account enumeration: generic error for both wrong email and wrong password
- * - Rate limiting is handled by Supabase Auth (server-side, not bypassable)
+ * - Client-side lockout after MAX_ATTEMPTS (defense-in-depth; real rate limiting
+ *   is Supabase Auth server-side and cannot be bypassed from the browser)
  * - Session stored in HttpOnly SameSite cookie via @supabase/ssr → CSRF-safe
- * - Redirect target is validated to be a relative path (prevents open redirect)
+ *
+ * OWASP A01 (Broken Access Control):
+ * - Redirect target validated as relative path (prevents open-redirect)
  */
 definePageMeta({ layout: false })
 useHead({ title: 'Masuk Admin — Paroki Santa Melania' })
@@ -14,10 +17,56 @@ useHead({ title: 'Masuk Admin — Paroki Santa Melania' })
 const route = useRoute()
 const { signIn } = useAuth()
 
+const MAX_ATTEMPTS = 5
+const LOCKOUT_MS = 5 * 60 * 1000
+
 const email = ref('')
 const password = ref('')
 const errorMsg = ref<string | null>(null)
 const loading = ref(false)
+
+const failedAttempts = ref(0)
+const lockoutUntil = ref(0)
+const now = ref(Date.now())
+let ticker: ReturnType<typeof setInterval> | null = null
+
+const isLockedOut = computed(() => now.value < lockoutUntil.value)
+const lockoutSecondsLeft = computed(() =>
+  isLockedOut.value ? Math.ceil((lockoutUntil.value - now.value) / 1000) : 0,
+)
+
+function startTicker() {
+  if (ticker) return
+  ticker = setInterval(() => {
+    now.value = Date.now()
+    if (now.value >= lockoutUntil.value && ticker) {
+      clearInterval(ticker)
+      ticker = null
+      errorMsg.value = null
+    }
+  }, 1000)
+}
+
+onMounted(() => {
+  try {
+    const raw = sessionStorage.getItem('login_attempts')
+    if (raw) {
+      const data = JSON.parse(raw) as { count: number; until: number }
+      failedAttempts.value = data.count
+      lockoutUntil.value = data.until
+      if (isLockedOut.value) {
+        errorMsg.value = `Terlalu banyak percobaan gagal. Coba lagi dalam ${lockoutSecondsLeft.value} detik.`
+        startTicker()
+      }
+    }
+  } catch {
+    // sessionStorage unavailable (e.g., private browsing restrictions)
+  }
+})
+
+onUnmounted(() => {
+  if (ticker) clearInterval(ticker)
+})
 
 // Only allow relative redirects — prevents open-redirect (OWASP A01)
 const safeRedirect = computed(() => {
@@ -27,7 +76,7 @@ const safeRedirect = computed(() => {
 })
 
 async function onSubmit() {
-  if (loading.value) return
+  if (loading.value || isLockedOut.value) return
   errorMsg.value = null
   loading.value = true
 
@@ -36,11 +85,28 @@ async function onSubmit() {
   loading.value = false
 
   if (err) {
-    // Generic message — no enumeration of which field is wrong
-    errorMsg.value = 'Email atau kata sandi tidak valid.'
+    failedAttempts.value++
     password.value = ''
+
+    if (failedAttempts.value >= MAX_ATTEMPTS) {
+      lockoutUntil.value = Date.now() + LOCKOUT_MS
+      try {
+        sessionStorage.setItem(
+          'login_attempts',
+          JSON.stringify({ count: failedAttempts.value, until: lockoutUntil.value }),
+        )
+      } catch {}
+      errorMsg.value = `Terlalu banyak percobaan gagal. Coba lagi dalam ${lockoutSecondsLeft.value} detik.`
+      startTicker()
+    } else {
+      // Generic message — no enumeration of which field is wrong (OWASP A07)
+      errorMsg.value = 'Email atau kata sandi tidak valid.'
+    }
     return
   }
+
+  // Clear lockout state on successful login
+  try { sessionStorage.removeItem('login_attempts') } catch {}
 
   await navigateTo(safeRedirect.value)
 }
@@ -144,7 +210,7 @@ async function onSubmit() {
           <!-- Submit -->
           <button
             type="submit"
-            :disabled="loading || !email || !password"
+            :disabled="loading || !email || !password || isLockedOut"
             class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#1a3b4c] text-white text-sm font-medium hover:bg-[#16333f] active:bg-[#12292e] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             <UIcon v-if="loading" name="i-lucide-loader-circle" class="size-4 animate-spin" />

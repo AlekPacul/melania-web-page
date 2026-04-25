@@ -9,8 +9,33 @@ export default defineNuxtConfig({
     name: 'Paroki Santa Melania Bandung',
   },
 
+  // OWASP A05 — Security Misconfiguration: apply security headers to all routes
+  routeRules: {
+    '/**': {
+      headers: {
+        // Prevent clickjacking (OWASP A05 / CWE-1021)
+        'X-Frame-Options': 'SAMEORIGIN',
+        // Prevent MIME sniffing (OWASP A05 / CWE-430)
+        'X-Content-Type-Options': 'nosniff',
+        // Limit referrer leakage
+        'Referrer-Policy': 'strict-origin-when-cross-origin',
+        // Disable unused browser features
+        'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
+        // Force HTTPS for 1 year once the HTTP→HTTPS nginx redirect is in place (F-07)
+        'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+        // Content Security Policy — 'unsafe-inline' required for Nuxt SSR hydration
+        'Content-Security-Policy':
+          "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://*.supabase.co; connect-src 'self' https://*.supabase.co; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'",
+        // Remove technology fingerprinting (OWASP A05 / CWE-200)
+        'X-Powered-By': '',
+      },
+    },
+  },
+
   sitemap: {
     strictNuxtContentPaths: false,
+    // F-04: exclude admin and auth paths from sitemap (OWASP A05)
+    exclude: ['/admin/**', '/login', '/lupa-sandi', '/reset-sandi'],
     urls: [
       { loc: '/', priority: 1.0, changefreq: 'weekly' },
       { loc: '/jadwal-misa', priority: 0.9, changefreq: 'weekly' },
