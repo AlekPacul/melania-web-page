@@ -1,6 +1,9 @@
 <script setup lang="ts">
 definePageMeta({ layout: false })
-useHead({ title: 'Lupa Kata Sandi — Paroki Santa Melania' })
+useHead({
+  title: 'Lupa Kata Sandi — Paroki Santa Melania',
+  meta: [{ name: 'robots', content: 'noindex, nofollow' }],
+})
 
 const { sendPasswordReset } = useAuth()
 

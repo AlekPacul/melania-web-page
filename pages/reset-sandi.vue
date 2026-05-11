@@ -1,13 +1,9 @@
 <script setup lang="ts">
-/**
- * Password-reset callback page.
- *
- * Supabase uses PKCE flow by default: the reset link arrives with ?code=xxx
- * in the query string. We exchange that code for a session, then let the user
- * set a new password. Falls back to onAuthStateChange for legacy implicit flow.
- */
 definePageMeta({ layout: false })
-useHead({ title: 'Reset Kata Sandi — Paroki Santa Melania' })
+useHead({
+  title: 'Reset Kata Sandi — Paroki Santa Melania',
+  meta: [{ name: 'robots', content: 'noindex, nofollow' }],
+})
 
 const supabase = useSupabase()
 const { updatePassword } = useAuth()
@@ -22,7 +18,19 @@ const loading = ref(false)
 const errorMsg = ref<string | null>(null)
 
 onMounted(async () => {
-  // PKCE flow: ?code=xxx in the URL
+  // Primary: token_hash sent directly in the email link — cross-browser safe,
+  // no PKCE code_verifier required. Needs email template update (see below).
+  const tokenHash = route.query.token_hash as string | undefined
+  if (tokenHash) {
+    const { error } = await supabase.auth.verifyOtp({
+      token_hash: tokenHash,
+      type: 'recovery',
+    })
+    stage.value = error ? 'invalid' : 'ready'
+    return
+  }
+
+  // Fallback: PKCE ?code= (only works in the same browser that requested the reset)
   const code = route.query.code as string | undefined
   if (code) {
     const { error } = await supabase.auth.exchangeCodeForSession(code)
@@ -30,18 +38,8 @@ onMounted(async () => {
     return
   }
 
-  // Legacy implicit flow: #access_token=...&type=recovery in hash
-  const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-    if (event === 'PASSWORD_RECOVERY') {
-      stage.value = 'ready'
-    }
-  })
-  onUnmounted(() => subscription.unsubscribe())
-
-  // Timeout: if no event arrives in 10s the link is invalid/expired
-  setTimeout(() => {
-    if (stage.value === 'waiting') stage.value = 'invalid'
-  }, 10_000)
+  // Nothing usable in the URL — link is invalid, expired, or accessed directly
+  stage.value = 'invalid'
 })
 
 const passwordMismatch = computed(

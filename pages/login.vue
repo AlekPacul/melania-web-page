@@ -12,7 +12,10 @@
  * - Redirect target validated as relative path (prevents open-redirect)
  */
 definePageMeta({ layout: false })
-useHead({ title: 'Masuk Admin — Paroki Santa Melania' })
+useHead({
+  title: 'Masuk Admin — Paroki Santa Melania',
+  meta: [{ name: 'robots', content: 'noindex, nofollow' }],
+})
 
 const route = useRoute()
 const { signIn } = useAuth()
