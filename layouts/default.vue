@@ -4,5 +4,6 @@
     <slot />
     <AppFooter />
     <AppBottomNav />
+    <PwaInstallBanner />
   </div>
 </template>
